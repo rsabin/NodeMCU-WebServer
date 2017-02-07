@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.labelGPIO {
+  width: 60px;
+  height: 30px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  display:none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
+
+<script type="text/javascript">
+function createXMLHttpRequest()
+{
+  var xmlhttp, bComplete = false;
+  try { xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); }
+  catch (e) { try { xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); }
+  catch (e) { try { xmlhttp = new XMLHttpRequest(); }
+  catch (e) { xmlhttp = false; }}}
+  if (!xmlhttp) return null;
+  this.connect = function(sURL, sMethod, sVars, fnDone)
+  {
+    if (!xmlhttp) return false;
+    bComplete = false;
+    sMethod = sMethod.toUpperCase();
+
+    try {
+      if (sMethod == "GET")
+      {
+        xmlhttp.open(sMethod, sURL+"?"+sVars, true);
+        sVars = "";
+      }
+      else
+      {
+        xmlhttp.open(sMethod, sURL, true);
+        xmlhttp.setRequestHeader("Method", "POST "+sURL+" HTTP/1.1");
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      }
+      xmlhttp.onreadystatechange = function(){
+        if (xmlhttp.readyState == 4 && !bComplete)
+        {
+          bComplete = true;
+          fnDone(xmlhttp);
+        }};
+      xmlhttp.send(sVars);
+    }
+    catch(z) { return false; }
+    return true;
+  };
+  return this;
+}
+
+function changeChk(chkBox) {
+var request = createXMLHttpRequest();
+
+    if ( !request ) { 
+        alert( request )
+        return false
+    }
+
+    var callback = function( oXML ) {
+        document.getElementById('teste').innerHTML = oXML.responseText;
+    }
+
+    request.connect(
+    '../esp/subled.php',
+    'POST',
+    'gpio=' + chkBox.value + '\n' + '' + chkBox.checked,
+    callback
+    );
+}
+
+</script>
+
+</head>
+
+<body>
+<h2>Toggle Switch</h2>
+
+<form id="frmEsp" name="frmEsp" method="post">
+
+
+<div>
+<label for="chkGPIO16" class="labelGPIO">GPIO16</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO16" name="chkGPIO16" value="GPI16" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+
+<div>
+<label for="chkGPIO5" class="labelGPIO">GPIO5</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO5" name="chkGPIO5" value="GPIO5" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+
+<div>
+<label for="chkGPIO4" class="labelGPIO">GPIO4</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO4" name="chkGPIO4" value="GPIO4" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+
+<div>
+<label for="chkGPIO0" class="labelGPIO">GPIO0</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO0" name="chkGPIO0" value="GPIO0" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+
+<div>
+<label for="chkGPIO2" class="labelGPIO">GPIO2</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO2" name="chkGPIO2" value="GPIO2" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+
+<textarea name="teste" id="teste"></textarea>
+</form>
+</body>
+</html> 
