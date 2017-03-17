@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8" />
+<title>ESP-12E Toggle</title>
 <style>
 .labelGPIO {
   width: 60px;
-  height: 30px;
+  height: 20px;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .switch {
   position: relative;
   display: inline-block;
   width: 50px;
-  height: 24px;
+  height: 22px;
 }
 
 .switch input {
@@ -35,8 +37,8 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
+  height: 14px;
+  width: 14px;
   left: 4px;
   bottom: 4px;
   background-color: white;
@@ -45,11 +47,15 @@
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #0080ff;
 }
 
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
+}
+
+input:disabled + .slider {
+  background-color: #f2f2f2;
 }
 
 input:checked + .slider:before {
@@ -65,6 +71,24 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+table td {
+  vertical-align: middle;
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+    border: 0px;
+}
+
+table td div {
+  display:block;
 }
 </style>
 
@@ -134,50 +158,342 @@ var request = createXMLHttpRequest();
 </head>
 
 <body>
-<h2>Toggle Switch</h2>
-
 <form id="frmEsp" name="frmEsp" method="post">
 
+<table>
+<tbody>
 
+<tr>
+<td><div style="height:60px;">&nbsp;</div></td>
+<td rowspan="17">
+<img src="pinout.jpg" alt="ESP8266" style="width:476px;height:606px" />
+</td>
+<td><div style="height:60px;">&nbsp;</div></td>
+</tr>
+
+<tr>
+<td>
 <div>
-<label for="chkGPIO16" class="labelGPIO">GPIO16</label>
+<label for="chkGPIOA0" class="labelGPIO">GPIOA0</label>
 <label class="switch">
-  <input type="checkbox" id="chkGPIO16" name="chkGPIO16" value="GPI16" onchange="changeChk(this);" />
+  <input type="checkbox" id="chkGPIOA0" name="chkGPIOA0" value="GPIOA0" onchange="changeChk(this);" disabled />
   <div class="slider round"></div>
 </label>
 </div>
-
+</td>
+<td>
 <div>
-<label for="chkGPIO5" class="labelGPIO">GPIO5</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO16" name="chkGPIO16" value="GPIO16" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO16" class="labelGPIO">GPIO16</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkRSV_1" class="labelGPIO">RSV</label>
+<label class="switch">
+  <input type="checkbox" id="chkRSV_1" name="chkRSV_1" value="RSV_1" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
 <label class="switch">
   <input type="checkbox" id="chkGPIO5" name="chkGPIO5" value="GPIO5" onchange="changeChk(this);" />
   <div class="slider round"></div>
 </label>
+<label for="chkGPIO5" class="labelGPIO">GPIO5</label>
 </div>
+</td>
+</tr>
 
+<tr>
+<td>
 <div>
-<label for="chkGPIO4" class="labelGPIO">GPIO4</label>
+<label for="chkRSV_2" class="labelGPIO">RSV</label>
+<label class="switch">
+  <input type="checkbox" id="chkRSV_2" name="chkRSV_2" value="RSV_2" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
 <label class="switch">
   <input type="checkbox" id="chkGPIO4" name="chkGPIO4" value="GPIO4" onchange="changeChk(this);" />
   <div class="slider round"></div>
 </label>
+<label for="chkGPIO4" class="labelGPIO">GPIO4</label>
 </div>
+</td>
+</tr>
 
+<tr>
+<td>
 <div>
-<label for="chkGPIO0" class="labelGPIO">GPIO0</label>
+<label for="chkGPIO10" class="labelGPIO">GPIO10</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO10" name="chkGPIO10" value="GPIO10" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
 <label class="switch">
   <input type="checkbox" id="chkGPIO0" name="chkGPIO0" value="GPIO0" onchange="changeChk(this);" />
   <div class="slider round"></div>
 </label>
+<label for="chkGPIO0" class="labelGPIO">GPIO0</label>
 </div>
+</td>
+</tr>
 
+<tr>
+<td>
 <div>
-<label for="chkGPIO2" class="labelGPIO">GPIO2</label>
+<label for="chkGPIO9" class="labelGPIO">GPIO9</label>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO9" name="chkGPIO9" value="GPIO9" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
 <label class="switch">
   <input type="checkbox" id="chkGPIO2" name="chkGPIO2" value="GPIO2" onchange="changeChk(this);" />
   <div class="slider round"></div>
 </label>
+<label for="chkGPIO2" class="labelGPIO">GPIO2</label>
 </div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkMOSI" class="labelGPIO">MOSI</label>
+<label class="switch">
+  <input type="checkbox" id="chkMOSI" name="chkMOSI" value="MOSI" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chk3v3_1" name="chk3v3_1" value="3v3_1" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+<label for="chk3v3_1" class="labelGPIO">3.3v</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkCS" class="labelGPIO">CS</label>
+<label class="switch">
+  <input type="checkbox" id="chkCS" name="chkCS" value="CS" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGND_1" name="chkGND_1" value="GND_1" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+<label for="chkGND_1" class="labelGPIO">GND</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkMISO" class="labelGPIO">MISO</label>
+<label class="switch">
+  <input type="checkbox" id="chkMISO" name="chkMISO" value="MISO" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO14" name="chkGPIO14" value="GPIO14" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO14" class="labelGPIO">GPIO14</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkSCLK" class="labelGPIO">SCLK</label>
+<label class="switch">
+  <input type="checkbox" id="chkSCLK" name="chkSCLK" value="SCLK" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO13" name="chkGPIO2" value="GPIO13" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO13" class="labelGPIO">GPIO13</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkGND_3" class="labelGPIO">GND</label>
+<label class="switch">
+  <input type="checkbox" id="chkGND_3" name="chkGND_3" value="GND_3" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO12" name="chkGPIO12" value="GPIO12" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO12" class="labelGPIO">GPIO12</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chk3v3_3" class="labelGPIO">3.3v</label>
+<label class="switch">
+  <input type="checkbox" id="chk3v3_3" name="chk3v3_3" value="3v3_3" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO15" name="chkGPIO15" value="GPIO15" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO15" class="labelGPIO">GPIO15</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkEN" class="labelGPIO">EN</label>
+<label class="switch">
+  <input type="checkbox" id="chkEN" name="chkEN" value="EN" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO3" name="chkGPIO3" value="GPIO3" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO3" class="labelGPIO">GPIO3</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkRST" class="labelGPIO">RST</label>
+<label class="switch">
+  <input type="checkbox" id="chkRST" name="chkRST" value="RST" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGPIO1" name="chkGPIO1" value="GPIO1" onchange="changeChk(this);" />
+  <div class="slider round"></div>
+</label>
+<label for="chkGPIO1" class="labelGPIO">GPIO1</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkGND_4" class="labelGPIO">GND</label>
+<label class="switch">
+  <input type="checkbox" id="chkGND_4" name="chkGND_4" value="GND_4" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chkGND_2" name="chkGND_2" value="GND_2" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+<label for="chkGND_2" class="labelGPIO">GND</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td>
+<div>
+<label for="chkVIN" class="labelGPIO">VIN</label>
+<label class="switch">
+  <input type="checkbox" id="chkVIN" name="chkVIN" value="VIN" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+</div>
+</td>
+<td>
+<div>
+<label class="switch">
+  <input type="checkbox" id="chk3v3_2" name="chk3v3_2" value="3v3_2" onchange="changeChk(this);" disabled />
+  <div class="slider round"></div>
+</label>
+<label for="chk3v3_2" class="labelGPIO">3.3v</label>
+</div>
+</td>
+</tr>
+
+<tr>
+<td><div style="height:75px;">&nbsp;</div></td>
+<td><div style="height:75px;">&nbsp;</div></td>
+</tr>
+
+</tbody>
+</table>
+
 
 <textarea name="teste" id="teste"></textarea>
 </form>
