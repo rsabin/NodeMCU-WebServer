@@ -1,6 +1,5 @@
-# NodeMCU-GPIO-WebServer
+# NodeMCU-WebServer
 Simple WebServer to control NodeMCU
 
-In the first run will create an AP with this credentials:<br />
-**SSID "NodeMCU"**<br />
-**Password "102030"**
+It connects or ask for credentials.
+Work for any project. Just edit main.lua.
