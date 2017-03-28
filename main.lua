@@ -83,13 +83,13 @@ function receive2(sck, req)
 	if (_ip ~= nil) then
 		print("MAIN: Cliente " .. _ip .. " enviando dados para o webserver.")
 	end
-	print("------------------------\n" .. req)
+	--print("------------------------\n" .. req)
 	print("------------------------")
-	--xyz = get_http_req(req)
-	--for k1, v1 in pairs(xyz) do
-	--	print("\t" .. k1 .. " = \'" .. v1 .. "\'")
-	--end
-	--print("------------------------")
+	xyz = get_http_req(req)
+	for k1, v1 in pairs(xyz) do
+		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
+	end
+	print("------------------------")
 	
 	local ht = {}
 	table.insert(ht, "<html>")
@@ -101,9 +101,9 @@ function receive2(sck, req)
 	table.insert(ht, "<body>")
 
 	table.insert(ht, "<p>Corpo da página</p>")
-	table.insert(ht, "<form method=\"post\">")
-	table.insert(ht, "<input id=\"txtDados\" type=\"text\" value=\"\" />")
-	table.insert(ht, "<input id=\"cmdEnvia\" type=\"submit\" value=\"Envia\" />")
+	table.insert(ht, "<form method=\"post\" action=\"\" >")
+	table.insert(ht, "<input id=\"txtDados\" name=\"txtDados\" type=\"text\" value=\"\" />")
+	table.insert(ht, "<input id=\"cmdEnvia\" name=\"cmdEnvia\" type=\"submit\" value=\"Envia\" />")
 	table.insert(ht, "</form>")
 	table.insert(ht, "</body>")
 	table.insert(ht, "</html>")
