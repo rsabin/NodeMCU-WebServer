@@ -61,7 +61,7 @@ end
 function listen2(sck)
 	sck:on("receive", receive2)
 	sck:on("connection", connection2)
-	sck:on("disconnection", disconnection2)
+	--sck:on("disconnection", disconnection2)
 end
 
 function connection2(sck, req)
@@ -83,18 +83,28 @@ function receive2(sck, req)
 	if (_ip ~= nil) then
 		print("MAIN: Cliente " .. _ip .. " enviando dados para o webserver.")
 	end
-
+	print("------------------------\n" .. req)
+	print("------------------------")
+	--xyz = get_http_req(req)
+	--for k1, v1 in pairs(xyz) do
+	--	print("\t" .. k1 .. " = \'" .. v1 .. "\'")
+	--end
+	--print("------------------------")
+	
 	local ht = {}
 	table.insert(ht, "<html>")
 	table.insert(ht, "<head>")
 	table.insert(ht, "<title>Título</title>")
 	table.insert(ht, "<meta charset=\"UTF-8\" />")
-	table.insert(ht, "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"/favicon.ico\" />")
+	table.insert(ht, "<link rel=\"shortcut icon\" href=\"/favicon.ico\" />")
 	table.insert(ht, "</head>")
 	table.insert(ht, "<body>")
 
 	table.insert(ht, "<p>Corpo da página</p>")
-
+	table.insert(ht, "<form method=\"post\">")
+	table.insert(ht, "<input id=\"txtDados\" type=\"text\" value=\"\" />")
+	table.insert(ht, "<input id=\"cmdEnvia\" type=\"submit\" value=\"Envia\" />")
+	table.insert(ht, "</form>")
 	table.insert(ht, "</body>")
 	table.insert(ht, "</html>")
 
@@ -105,7 +115,7 @@ function receive2(sck, req)
 
 	table.insert(ht, 1, "HTTP/1.0 200 OK")
 	table.insert(ht, 2, "Server: " .. _hostname)
-	table.insert(ht, 3, "Connection: close")
+	table.insert(ht, 3, "Connection: keep-alive")
 	table.insert(ht, 4, "Content-Type: text/html; charset=UTF-8")
 	table.insert(ht, 5, "Cache-Control: no-cache")
 	table.insert(ht, 6, "Content-Language: pt-BR, en-US")
@@ -145,7 +155,9 @@ function get_http_req(instr)
 		 if (end_ndx ~= nil) then
 			v = trim (string.sub (str, end_ndx + 2))
 			key = trim (string.sub (str, strt_ndx, end_ndx))
-			t[key] = v
+			if ((key ~= "") or (v ~= "")) then
+				t[key] = v
+			end
 		 end
 	  end
 	end
