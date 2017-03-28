@@ -1,21 +1,21 @@
 --[[ *********************************************************
 ENDUSER.lua
-Se chegou aqui, È pra configurara  wifi e mandar de volta pro arq. que testa.
-********************************************************* ]]--
+Se chegou aqui, √© pra configurar wifi e mandar de volta pro arq. que testa.
+********************************************************* --]]
 
-print("ENDUSER: Inicando procedimentos para configuraÁ„o via AP.")
+print("ENDUSER: Inicando procedimentos para configura√ß√£o via AP.")
 
-wifi.setmode(wifi.SOFTAP)
+wifi.setmode(wifi.STATIONAP)
 _cfg1 = {
-    ssid = "SetupESP_" .. node.chipid(),
+	ssid = "SetupESP" .. node.chipid(),
 	auth = wifi.OPEN,
 	hidden = false,
 	save = false}
 
 _cfg2 = {
-  ip = "192.168.4.1",
-  netmask = "255.255.255.0",
-  gateway = "192.168.4.1"
+	ip = "192.168.4.1",
+	netmask = "255.255.255.0",
+	gateway = "192.168.4.1"
 }
 
 print("ENDUSER: Procure uma rede com o nome " .. _cfg1.ssid .. " e acesse o IP " .. _cfg2.ip .. ".")
@@ -23,23 +23,35 @@ print("ENDUSER: Procure uma rede com o nome " .. _cfg1.ssid .. " e acesse o IP "
 wifi.ap.setip(_cfg2)
 wifi.ap.config(_cfg1)
 
-enduser_setup.manual(true)
+enduser_setup.manual(false)
 
-enduser_setup.start(setup_ok, setup_error, setup_debug)
-
+tmr.create():alarm(5000, tmr.ALARM_SINGLE, function() start_enduser() end)
 
 function setup_ok()
-	enduser_setup.stop()
-	print("ENDUSER: Sucesso. Chamando programa principal em 10 segundos (por seguranÁa).")
+	print("ENDUSER: Sucesso. Chamando programa principal em 10 segundos (por seguran√ßa).")
+	--enduser_setup.stop()
 	tmr.create():alarm(10000, tmr.ALARM_SINGLE, function() dofile("main.lua") end)
 end
 
 function setup_error(err, str)
-	enduser_setup.stop()
-    print("ENDUSER: Erro #" .. err .. " - " .. str .. ". Chamando programa de teste de wifi novamente.")
+	print("ENDUSER: Erro #" .. err .. " - " .. str .. ". Chamando programa de teste de wifi novamente.")
+	--enduser_setup.stop()
 	dofile("wifi_ok.lua")
 end
 
 function setup_debug(str)
 	print("ENDUSER: Debug: " .. str .. ".")
+end
+
+function start_enduser()
+	print("ENDUSER: Aguardando configura√ß√£o do usu√°rio.")
+	enduser_setup.start(
+		function()
+			setup_ok()
+		end,
+		function(err, str)
+			setup_error(err, str)
+		end,
+		print
+	)
 end

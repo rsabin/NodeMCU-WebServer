@@ -1,8 +1,8 @@
 --[[ *********************************************************
 WIFI_TST.lua
-A principal funÁ„o deste arq. È tentar conectar no wifi com os dados j· salvos.
-Caso consiga, segue pro programa principal. Sen„o chama o enduser para configurar.
-********************************************************* ]]--
+A principal fun√ß√£o deste arq. √© tentar conectar no wifi com os dados j√° salvos.
+Caso consiga, segue pro programa principal. Sen√£o chama o enduser para configurar.
+********************************************************* --]]
 print("WIFI_TST: Testando wifi em 1 segundo.")
 
 _MAX_TENTATIVAS = 5
@@ -17,22 +17,22 @@ _timer1:alarm(_tenta1 * 1000, tmr.ALARM_SEMI, function() test_wifi() end)
 function test_wifi()
 	print("WIFI_TST: Tentativa nro." .. _tenta1)
 
-	-- Aguarda conex„o algumas vezes e depois desiste.
+	-- Aguarda conex√£o algumas vezes e depois desiste.
 	_tenta1 = _tenta1 + 1
 	if (_tenta1 >= _MAX_TENTATIVAS) then
-		print("WIFI_TST: M·ximo de tentativas atingido. Desviando para ENDUSER.")
+		print("WIFI_TST: M√°ximo de tentativas atingido. Desviando para ENDUSER.")
 		dofile("enduser.lua")
 
 	else
 
-		-- Se conectou, manda pro programa principal. Sen„o chama esta funÁ„o de novo
+		-- Se conectou, manda pro programa principal. Sen√£o chama esta fun√ß√£o de novo
 		local _stat = wifi.sta.status()
 		if (_stat == 5) then
 			print("WIFI_TST: Sucesso (" .. str_sta_status(_stat) .. "). Desviando para MAIN.")
 			dofile("main.lua")
 
 		else
-			print("WIFI_TST: Ainda n„o conectou (" .. str_sta_status(_stat) .. "). Novo teste em " .. _tenta1 .. " segundo.")
+			print("WIFI_TST: Ainda n√£o conectou (" .. str_sta_status(_stat) .. "). Novo teste em " .. _tenta1 .. " segundos.")
 			_timer1:interval(_tenta1 * 1000)
 			_timer1:start()
 
