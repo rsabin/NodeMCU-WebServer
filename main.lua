@@ -98,24 +98,24 @@ function receive2(sck, req)
 	end
 	vars1, vars2 = get_http_req(req)
 	for k, v in string.gmatch(vars1['REQUEST'], "(%w+)=(%w+)&*") do
-		_GET[k] = v
+		_GET[string.lower(k)] = string.lower(v)
 	end
 	for k1, v1 in pairs(_GET) do
 		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
 	end
 	
-	if (_GET["pin1"] == "1") then
+	if (_GET["pin1"] == "on") then
 		gpio.write(_pin1, gpio.HIGH)
 		_pin1st = 1
-	elseif (_GET["pin1"] == "0") then
+	elseif (_GET["pin1"] == "off") then
 		gpio.write(_pin1, gpio.LOW)
 		_pin1st = 0
 	end
 	
-	if (_GET["pin2"] == "1") then
+	if (_GET["pin2"] == "on") then
 		gpio.write(_pin2, gpio.HIGH)
 		_pin2st = 1
-	elseif (_GET["pin2"] == "0") then
+	elseif (_GET["pin2"] == "off") then
 		gpio.write(_pin2, gpio.LOW)
 		_pin2st = 0
 	end
@@ -128,14 +128,14 @@ function receive2(sck, req)
 	table.insert(ht, "</head>")
 	table.insert(ht, "<body>")
 	if (_pin1st == 1) then
-		table.insert(ht, "<p>PIN1: <a href=\"?pin1=0\"><button>OFF</button></a></p>")
+		table.insert(ht, "<p>PIN1: <a href=\"?pin1=off\"><button>OFF</button></a></p>")
 	elseif (_pin1st == 0) then
-		table.insert(ht, "<p>PIN1: <a href=\"?pin1=1\"><button>ON</button></a></p>")
+		table.insert(ht, "<p>PIN1: <a href=\"?pin1=on\"><button>ON</button></a></p>")
 	end
 	if (_pin2st == 1) then
-		table.insert(ht, "<p>PIN2: <a href=\"?pin2=0\"><button>OFF</button></a></p>")
+		table.insert(ht, "<p>PIN2: <a href=\"?pin2=off\"><button>OFF</button></a></p>")
 	elseif (_pin2st == 0) then
-		table.insert(ht, "<p>PIN2: <a href=\"?pin2=1\"><button>ON</button></a></p>")
+		table.insert(ht, "<p>PIN2: <a href=\"?pin2=on\"><button>ON</button></a></p>")
 	end
 	table.insert(ht, "</body>")
 	table.insert(ht, "</html>")
