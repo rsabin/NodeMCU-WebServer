@@ -83,10 +83,14 @@ function receive2(sck, req)
 	if (_ip ~= nil) then
 		print("MAIN: Cliente " .. _ip .. " enviando dados para o webserver.")
 	end
-	--print("------------------------\n" .. req)
+	print("------------------------\n" .. req)
 	print("------------------------")
-	xyz = get_http_req(req)
+	xyz, abc = get_http_req(req)
 	for k1, v1 in pairs(xyz) do
+		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
+	end
+	print("------------------------")
+	for k1, v1 in pairs(abc) do
 		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
 	end
 	print("------------------------")
@@ -102,7 +106,8 @@ function receive2(sck, req)
 
 	table.insert(ht, "<p>Corpo da página</p>")
 	table.insert(ht, "<form method=\"post\" action=\"\" >")
-	table.insert(ht, "<input id=\"txtDados\" name=\"txtDados\" type=\"text\" value=\"\" />")
+	table.insert(ht, "<input id=\"txtDados1\" name=\"txtDados\" type=\"text\" value=\"\" />")
+	table.insert(ht, "<input id=\"txtDados2\" name=\"txtDados\" type=\"text\" value=\"\" />")
 	table.insert(ht, "<input id=\"cmdEnvia\" name=\"cmdEnvia\" type=\"submit\" value=\"Envia\" />")
 	table.insert(ht, "</form>")
 	table.insert(ht, "</body>")
@@ -137,35 +142,49 @@ function receive2(sck, req)
 end
 
 function get_http_req(instr)
-	local t = {}
+	local t1 = {}
+	local t2 = {}
 	local first = nil
 	local key, v, strt_ndx, end_ndx
+	local body = 0
 
-	for str in string.gmatch (instr, "([^\n]+)") do
-	  -- First line in the method and path
-	  if (first == nil) then
-		 first = 1
-		 strt_ndx, end_ndx = string.find (str, "([^ ]+)")
-		 v = trim (string.sub (str, end_ndx + 2))
-		 key = trim (string.sub (str, strt_ndx, end_ndx))
-		 t["METHOD"] = key
-		 t["REQUEST"] = v
-	  else -- Process and reamaining ":" fields
-		 strt_ndx, end_ndx = string.find (str, "([^:]+)")
-		 if (end_ndx ~= nil) then
-			v = trim (string.sub (str, end_ndx + 2))
-			key = trim (string.sub (str, strt_ndx, end_ndx))
-			if ((key ~= "") or (v ~= "")) then
-				t[key] = v
+	for str in string.gmatch(instr, "([^\n]+)") do
+		-- First line in the method and path
+		if (first == nil) then
+			first = 1
+			strt_ndx, end_ndx = string.find(str, "([^ ]+)")
+			v = trim(string.sub(str, end_ndx + 2))
+			key = trim(string.sub(str, strt_ndx, end_ndx))
+			t1["METHOD"] = key
+			t1["REQUEST"] = v
+		elseif (body == 0) then 
+			strt_ndx, end_ndx = string.find(str, "([^:]+)")
+			if (end_ndx ~= nil) then
+				v = trim(string.sub(str, end_ndx + 2))
+				key = trim(string.sub(str, strt_ndx, end_ndx))
+				if ((key ~= "") or (v ~= "")) then
+					t1[key] = v
+				else
+					body = 1
+				end
 			end
-		 end
-	  end
+		elseif (body == 1) then
+			for str2 in string.gmatch(str, "([^&]+)") do
+				strt_ndx, end_ndx = string.find(str2, "([^=]+)")
+				if (end_ndx ~= nil) then
+					v = trim(string.sub(str2, end_ndx + 2))
+					key = trim(string.sub(str2, strt_ndx, end_ndx))
+					if ((key ~= "") or (v ~= "")) then
+						t2[key] = v
+					end
+				end
+			end
+		end
 	end
-
-	return t
+	return t1, t2
 end
 
 -- String trim left and right
 function trim(s)
-	return (s:gsub ("^%s*(.-)%s*$", "%1"))
+	return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
