@@ -7,6 +7,11 @@ print("MAIN: Programa principal iniciado.")
 
 _MAX_TENTATIVAS_IP = 5
 
+_pin1 = 2
+_pin2 = 3
+_pin1st = 0
+_pin2st = 0
+
 _server2 = nil
 
 _funcao2 = 1
@@ -41,9 +46,16 @@ function start_webserver()
 			end
 		end
 		_timer2:start()
-
-
+	
 	elseif (_funcao2 == 2) then
+		print("MAIN: Inicializando GPIO " .. _pin1 .. " e " .. _pin2 .. ".")
+		gpio.mode(_pin1, gpio.OUTPUT)
+		gpio.mode(_pin2, gpio.OUTPUT)
+		_tenta2 = 1
+		_funcao2 = _funcao2 + 1
+		_timer2:start()
+
+	elseif (_funcao2 == 3) then
 		print("MAIN: Webserver inicializado. É só usar agora.")
 
 		if (_server2 == nil) then
@@ -80,36 +92,51 @@ end
 
 function receive2(sck, req)
 	local _port, _ip = sck:getpeer()
+	local _GET = {}
 	if (_ip ~= nil) then
 		print("MAIN: Cliente " .. _ip .. " enviando dados para o webserver.")
 	end
-	print("------------------------\n" .. req)
-	print("------------------------")
-	xyz, abc = get_http_req(req)
-	for k1, v1 in pairs(xyz) do
+	vars1, vars2 = get_http_req(req)
+	for k, v in string.gmatch(vars1['REQUEST'], "(%w+)=(%w+)&*") do
+		_GET[k] = v
+	end
+	for k1, v1 in pairs(_GET) do
 		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
 	end
-	print("------------------------")
-	for k1, v1 in pairs(abc) do
-		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
-	end
-	print("------------------------")
 	
+	if (_GET["pin1"] == "1") then
+		gpio.write(_pin1, gpio.HIGH)
+		_pin1st = 1
+	elseif (_GET["pin1"] == "0") then
+		gpio.write(_pin1, gpio.LOW)
+		_pin1st = 0
+	end
+	
+	if (_GET["pin2"] == "1") then
+		gpio.write(_pin2, gpio.HIGH)
+		_pin2st = 1
+	elseif (_GET["pin2"] == "0") then
+		gpio.write(_pin2, gpio.LOW)
+		_pin2st = 0
+	end
+
 	local ht = {}
 	table.insert(ht, "<html>")
 	table.insert(ht, "<head>")
-	table.insert(ht, "<title>Título</title>")
+	table.insert(ht, "<title>" .. _hostname .. "</title>")
 	table.insert(ht, "<meta charset=\"UTF-8\" />")
-	table.insert(ht, "<link rel=\"shortcut icon\" href=\"/favicon.ico\" />")
 	table.insert(ht, "</head>")
 	table.insert(ht, "<body>")
-
-	table.insert(ht, "<p>Corpo da página</p>")
-	table.insert(ht, "<form method=\"post\" action=\"\" >")
-	table.insert(ht, "<input id=\"txtDados1\" name=\"txtDados\" type=\"text\" value=\"\" />")
-	table.insert(ht, "<input id=\"txtDados2\" name=\"txtDados\" type=\"text\" value=\"\" />")
-	table.insert(ht, "<input id=\"cmdEnvia\" name=\"cmdEnvia\" type=\"submit\" value=\"Envia\" />")
-	table.insert(ht, "</form>")
+	if (_pin1st == 1) then
+		table.insert(ht, "<p>PIN1: <a href=\"?pin1=0\"><button>OFF</button></a></p>")
+	elseif (_pin1st == 0) then
+		table.insert(ht, "<p>PIN1: <a href=\"?pin1=1\"><button>ON</button></a></p>")
+	end
+	if (_pin2st == 1) then
+		table.insert(ht, "<p>PIN2: <a href=\"?pin2=0\"><button>OFF</button></a></p>")
+	elseif (_pin2st == 0) then
+		table.insert(ht, "<p>PIN2: <a href=\"?pin2=1\"><button>ON</button></a></p>")
+	end
 	table.insert(ht, "</body>")
 	table.insert(ht, "</html>")
 
@@ -118,7 +145,7 @@ function receive2(sck, req)
 		sht = sht + string.len(value) + 1
 	end
 
-	table.insert(ht, 1, "HTTP/1.0 200 OK")
+	table.insert(ht, 1, "HTTP/1.1 200 OK")
 	table.insert(ht, 2, "Server: " .. _hostname)
 	table.insert(ht, 3, "Connection: keep-alive")
 	table.insert(ht, 4, "Content-Type: text/html; charset=UTF-8")
