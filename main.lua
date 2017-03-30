@@ -7,10 +7,9 @@ print("MAIN: Programa principal iniciado.")
 
 _MAX_TENTATIVAS_IP = 5
 
-_pin1 = 2
-_pin2 = 3
-_pin1st = 0
-_pin2st = 0
+_pinna = {"pin1", "pin2", "pin3", "pin4", "pin5", "pin6", "pin7", "pin8", "pin9", "pin10", "pin11", "pin12", "pin13"}
+_pinio = { 3    ,  10   ,  4    ,  9    ,  2    ,  1    ,  11   ,  12   ,  6    ,  7     ,  5     ,  8     ,  0 }
+_pinst = { -1   ,  -1   ,  -1   ,  -1   ,  -1   ,  -1   ,  -1   ,  -1   ,  -1   ,  -1    ,  -1    ,  -1    ,  -1}
 
 _server2 = nil
 
@@ -46,7 +45,8 @@ function start_webserver()
 			end
 		end
 		_timer2:start()
-	
+
+    --[[
 	elseif (_funcao2 == 2) then
 		print("MAIN: Inicializando GPIO " .. _pin1 .. " e " .. _pin2 .. ".")
 		gpio.mode(_pin1, gpio.OUTPUT)
@@ -54,8 +54,8 @@ function start_webserver()
 		_tenta2 = 1
 		_funcao2 = _funcao2 + 1
 		_timer2:start()
-
-	elseif (_funcao2 == 3) then
+    --]]
+	elseif (_funcao2 == 2) then
 		print("MAIN: Webserver inicializado. É só usar agora.")
 
 		if (_server2 == nil) then
@@ -103,22 +103,26 @@ function receive2(sck, req)
 	for k1, v1 in pairs(_GET) do
 		print("\t" .. k1 .. " = \'" .. v1 .. "\'")
 	end
-	
-	if (_GET["pin1"] == "on") then
-		gpio.write(_pin1, gpio.HIGH)
-		_pin1st = 1
-	elseif (_GET["pin1"] == "off") then
-		gpio.write(_pin1, gpio.LOW)
-		_pin1st = 0
-	end
-	
-	if (_GET["pin2"] == "on") then
-		gpio.write(_pin2, gpio.HIGH)
-		_pin2st = 1
-	elseif (_GET["pin2"] == "off") then
-		gpio.write(_pin2, gpio.LOW)
-		_pin2st = 0
-	end
+
+    for x1 = 1, 13 do
+        k1 = _pinna[x1]
+        if (_GET[k1] == "on") then
+            if (_pinst[x1] == -1) then
+                gpio.mode(_pinio[x1], gpio.OUTPUT)
+            end
+            gpio.write(_pinio[x1], gpio.HIGH)
+            _pinst[x1] = 1
+            print("\tLigou " .. k1 .. " - " .. _pinna[x1] .. " - " .. _pinio[x1] .. " - " .. _pinst[x1])
+        elseif (_GET[k1] == "off") then
+            if (_pinst[x1] == -1) then
+                gpio.mode(_pinio[x1], gpio.OUTPUT)
+            end
+            gpio.write(_pinio[x1], gpio.LOW)
+            _pinst[x1] = 0
+            print("\tDesligou " .. k1 .. " - " .. _pinna[x1] .. " - " .. _pinio[x1] .. " - " .. _pinst[x1])
+        end
+    end
+    
 
 	local ht = {}
 	table.insert(ht, "<html>")
@@ -127,16 +131,21 @@ function receive2(sck, req)
 	table.insert(ht, "<meta charset=\"UTF-8\" />")
 	table.insert(ht, "</head>")
 	table.insert(ht, "<body>")
-	if (_pin1st == 1) then
-		table.insert(ht, "<p>PIN1: <a href=\"?pin1=off\"><button>OFF</button></a></p>")
-	elseif (_pin1st == 0) then
-		table.insert(ht, "<p>PIN1: <a href=\"?pin1=on\"><button>ON</button></a></p>")
-	end
-	if (_pin2st == 1) then
-		table.insert(ht, "<p>PIN2: <a href=\"?pin2=off\"><button>OFF</button></a></p>")
-	elseif (_pin2st == 0) then
-		table.insert(ht, "<p>PIN2: <a href=\"?pin2=on\"><button>ON</button></a></p>")
-	end
+
+    for x1 = 1, 13 do
+        k1 = _pinna[x1]
+        table.insert(ht, "<p>" .. string.upper(k1) .. ": <a href=\"?" .. k1 .. "=on\"><button>ON</button></a> <a href=\"?" .. k1 .. "=off\"><button>OFF</button></a></p>")
+    end
+--	if (_pin1st == 1) then
+--		table.insert(ht, "<p>PIN1: <a href=\"?pin1=off\"><button>OFF</button></a></p>")
+--	elseif (_pin1st == 0) then
+--		table.insert(ht, "<p>PIN1: <a href=\"?pin1=on\"><button>ON</button></a></p>")
+--	end
+--	if (_pin2st == 1) then
+--		table.insert(ht, "<p>PIN2: <a href=\"?pin2=off\"><button>OFF</button></a></p>")
+--	elseif (_pin2st == 0) then
+--		table.insert(ht, "<p>PIN2: <a href=\"?pin2=on\"><button>ON</button></a></p>")
+--	end
 	table.insert(ht, "</body>")
 	table.insert(ht, "</html>")
 
